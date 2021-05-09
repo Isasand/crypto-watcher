@@ -80,6 +80,11 @@ GMR:PancakeSwap:0x0523215dcafbf4e4aa92117d13c6985a3bef27d7:228120850.69031771
 ADA:PancakeSwap:0x3ee2200efb3400fabb9aacf31297cbdd1d435d47:94.870701
 ```
 
+4. To run the script, open a terminal and run the following command in the same folder as the script:
+```
+python3 crypto.py
+```
+
 # Good to know
 - Some tokens will not have price information available in the used APIs, then you will be prompted to input the value you hold manually or skip that token. 
 
