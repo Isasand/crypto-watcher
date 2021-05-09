@@ -29,37 +29,40 @@ err = []
 
 for x in f:
     if not x.startswith("#"):
-        if x.split(":")[1] == "PancakeSwap":
+        try: 
+            if x.split(":")[1] == "PancakeSwap":
 
-            price = calculate_pcswap_value(
-                float(get_pcswap_price((x.split(":")[2]))), 
-                float(x.split(":")[3].strip('\n')),
-                bnb_price_in_usd
-            )
-            total += price
-
-            if price != 0.0:
-                print(x.split(":")[0] + ": " + str(price) + " USDT")
-            else: err.append("No price information available for token: " + x.split(":")[0])
-
-        elif x.split(":")[1] == "Binance": 
-            price_in_usd = float(get_binance_price(x.split(":")[0]+"USDT"))
-            if not price_in_usd:
-                err.append("No convertion to USDT for token: " + x.split(":")[0])
-            else:
-                price = calculate_binance_value(
-                    price_in_usd,
-                    float(x.split(":")[2].strip('\n')),
+                price = calculate_pcswap_value(
+                    float(get_pcswap_price((x.split(":")[2]))), 
+                    float(x.split(":")[3].strip('\n')),
+                    bnb_price_in_usd
                 )
-
                 total += price
 
                 if price != 0.0:
                     print(x.split(":")[0] + ": " + str(price) + " USDT")
-                else: 
-                    err.append("No price information available for token: " + x.split(":")[0])
-        else:
-            err.append("Exchange not supported for token: " + x.split(":")[0])
+                else: err.append("No price information available for token: " + x.split(":")[0])
+
+            elif x.split(":")[1] == "Binance": 
+                price_in_usd = float(get_binance_price(x.split(":")[0]+"USDT"))
+                if not price_in_usd:
+                    err.append("No convertion to USDT for token: " + x.split(":")[0])
+                else:
+                    price = calculate_binance_value(
+                        price_in_usd,
+                        float(x.split(":")[2].strip('\n')),
+                    )
+
+                    total += price
+
+                    if price != 0.0:
+                        print(x.split(":")[0] + ": " + str(price) + " USDT")
+                    else: 
+                        err.append("No price information available for token: " + x.split(":")[0])
+            else:
+                err.append("Exchange not supported for token: " + x.split(":")[0])
+        except Exception as e:
+            print("The row was in the wrong format, follow the conventon in the readme and make sure that you don't keep empty rows in the file.")
 
 print("\n")
 for e in err: 
