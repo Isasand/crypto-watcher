@@ -66,7 +66,7 @@ ETH:Binance:0.04179
 ```
 
 For a token you hold from PancakeSwap, the row should follow this convention:
-`{name}:PancakeSwap:{token-adress}:{amount-that-you-hold}
+`{name}:PancakeSwap:{token-adress}:{amount-that-you-hold}`
 Example row for a token you hold from PancakeSwap:  
 ```
 BONFIRE:PancakeSwap:0x5e90253fbae4dab78aa351f4e6fed08a64ab5590:193904333.915533
