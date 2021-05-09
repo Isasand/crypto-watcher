@@ -87,6 +87,11 @@ python3 crypto.py
 
 # Good to know
 - Some tokens will not have price information available in the used APIs, then you will be prompted to input the value you hold manually or skip that token. 
+- You can comment out a row in your holders file if you trade a lot back and forth. Just comment out a row with `#` like this: 
+```
+#BNB:Binance:0.284112
+```
+and the script will skip that token. 
 
 # TODO:
 - I will add support for more exchanges going forward. 
