@@ -34,6 +34,7 @@ Total value: xxx.xx
 Total value: 0
 
 Overall total: xxx.xxx
+Profit / loss: xxx.xx
 
 ```
 
