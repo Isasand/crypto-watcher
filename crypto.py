@@ -1,6 +1,9 @@
 
 import requests
 import json
+import colorama
+
+colorama.init()
 
 INVESTED = 0000
 
