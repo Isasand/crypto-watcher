@@ -105,6 +105,11 @@ def pretty_print_pancake_table_and_get_total(value_map):
             v1_bnb = "xx.xx"
             v2_usd = round(info['v2']['usd'], 2)
             v2_bnb = round(info['v2']['bnb'], 2)
+        else:
+            v1_usd = "xx.xx"
+            v1_bnb = "xx.xx"
+            v2_usd = "xx.xx"
+            v2_bnb = "xx.xx"
 
         if 'bnb_spent' in info:
             percentage = round(((bnb_diff / info['bnb_spent']) * 100), 2)
