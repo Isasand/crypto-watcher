@@ -15,6 +15,9 @@ def get_binance_price(token):
                 return x['price']
     return False 
 
+bnb_price_in_usd = float(get_binance_price('BNBUSDT'))
+
+
 def get_pcswap_price(adress, version, token):
     err = []
     resp = requests.get("https://api.pancakeswap.info/api/{}tokens/{}".format(('' if version != 'v2' else 'v2/'), adress))
@@ -67,6 +70,34 @@ def create_pancakeswap_valuemap(f):
 
 def pretty_print_pancake_table_and_get_total(value_map):
     total = 0
+    failed = []
+    for token, info in value_map.items():
+        if not 'v1' in info and not 'v2' in info:
+            value = input("No price information for {}, input version:value:currency (e.g v1:0.1:bnb or v2:24.6:usd) 'n':".format(token))
+            if value != 'n':
+                if value.split(':')[0] == 'v1':
+                    info['v1'] = {}
+                    if value.split(':')[2] == 'bnb':
+                        info['v1']['bnb'] = float(value.split(':')[1])
+                        info['v1']['usd'] = info['v1']['bnb'] * bnb_price_in_usd
+                    elif value.split(':')[2] == 'usd':
+                        info['v1']['usd'] = float(value.split(':')[1])
+                        info['v1']['bnb'] = info['v1']['usd'] / bnb_price_in_usd
+                elif value.split(':')[0] == 'v2':
+                    info['v2'] = {}
+                    if value.split(':')[2] == 'bnb':
+                        info['v2']['bnb'] = float(value.split(':')[1])
+                        info['v2']['usd'] = info['v2']['bnb'] * bnb_price_in_usd
+                    elif value.split(':')[2] == 'usd':
+                        info['v2']['usd'] = float(value.split(':')[1])
+                        info['v2']['bnb'] = info['v2']['usd'] / bnb_price_in_usd
+
+    print("\n+--------------------------------------------------------------------------+")
+    print("| {:^72} |".format("pancakeSwap"))
+    print("+--------------------------------------------------------------------------+")
+    print("| {:<15} | {:<8} / {:>8} | {:<8} / {:>8} | {} |".format('NAME', 'V1 USD', 'BNB', "V2 USD", "BNB", "PERCENTAGE"))
+    print("+--------------------------------------------------------------------------+")
+
     for token, info in value_map.items():
         percentage = 0
         # token exists both in v1 and v2
@@ -156,16 +187,12 @@ def pretty_print_binance_table(value_map):
         print("| {:<18} | {:<18} |".format(token, price))
     print("+-----------------------------------------+")
 
+
 f = open("holdings.txt", "r")
 bnb_price_in_usd = float(get_binance_price('BNBUSDT'))
 total = 0 
 err = []
 binance = {}
-print("\n+--------------------------------------------------------------------------+")
-print("| {:^72} |".format("pancakeSwap"))
-print("+--------------------------------------------------------------------------+")
-print("| {:<15} | {:<8} / {:>8} | {:<8} / {:>8} | {} |".format('NAME', 'V1 USD', 'BNB', "V2 USD", "BNB", "PERCENTAGE"))
-print("+--------------------------------------------------------------------------+")
 
 value_map = {}
 try:
