@@ -214,12 +214,4 @@ pretty_print_binance_table(binance)
 print("Total value: {}\n".format(total_binance))
 
 print("Overall total: {}".format(total_binance + total_pcsw))
-
-# print("\n\n***** BINANCE COINS *****")
-# print("{} {}".format('NAME', 'USD'))
-# for coin, value in binance.items():
-#     print("{} {}".format(coin, value))
-        
-# print("\n*****************************\n")
-# print("Total USD: ", total)
-# print("TOTAL PROFIT: " + str(total - INVESTED) + " USD")
+print("Profit / loss: {}".format(total_binance + total_pcsw - INVESTED))
