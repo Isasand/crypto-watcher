@@ -12,12 +12,15 @@ def get_binance_price(token):
                 return x['price']
     return False 
 
-def get_pcswap_price(adress, version):
+def get_pcswap_price(adress, version, token):
+    err = []
     resp = requests.get("https://api.pancakeswap.info/api/{}tokens/{}".format(('' if version != 'v2' else 'v2/'), adress))
     if resp.ok and '0' == resp.json()['data']['price']:
         status_ok = False
     else: status_ok = resp.ok
-    return status_ok, resp.json()['data']['price'], resp.json()['data']['price_BNB'], resp.json()['data']['symbol']
+    if 'error' in resp.json():
+        return err, False, False, False, False
+    return err, status_ok, resp.json()['data']['price'], resp.json()['data']['price_BNB'], resp.json()['data']['symbol']
 
 def calculate_value(price, amount):
     return price * amount
@@ -30,6 +33,7 @@ def color_percentage(percentage):
     else: return "\033[91m{}\033[0m".format(percentage)
 
 def create_pancakeswap_valuemap(f):
+    err = []
     for x in f:
         if not x.startswith("#"):
             if x.split(":")[1] == "PancakeSwap":
@@ -38,7 +42,7 @@ def create_pancakeswap_valuemap(f):
                 v2 = {}
                 value_map[name] = {}
                 for version in ["v1", "v2"]:
-                    status_ok, price_usd, price_bnb, symbol = get_pcswap_price(x.split(":")[2], version)
+                    err, status_ok, price_usd, price_bnb, symbol = get_pcswap_price(x.split(":")[2], version, name)
 
                     if status_ok:
                         amount = x.split(":")[3].strip('\n')
@@ -56,7 +60,7 @@ def create_pancakeswap_valuemap(f):
                         try: 
                             value_map[name]['bnb_spent'] = float(x.split(":")[4])
                         except: pass
-    return value_map
+    return err, value_map
 
 def pretty_print_pancake_table_and_get_total(value_map):
     total = 0
@@ -132,7 +136,6 @@ def create_binance_valuemap(f):
                     total += price_usd
 
                     if price_usd != 0.0:
-                        #print(x.split(":")[0] + ": " + str(price_usd) + " USDT")
                         binance[x.split(":")[0]] = price_usd
                     else: 
                         err.append("No price information available for token: " + x.split(":")[0])
@@ -158,7 +161,7 @@ print("+------------------------------------------------------------------------
 
 value_map = {}
 try:
-    value_map = create_pancakeswap_valuemap(f)
+    err, value_map = create_pancakeswap_valuemap(f)
 except Exception as e:
     print(e)
 
@@ -181,12 +184,6 @@ print("Overall total: {}".format(total_binance + total_pcsw))
 # print("{} {}".format('NAME', 'USD'))
 # for coin, value in binance.items():
 #     print("{} {}".format(coin, value))
-
-# for e in err: 
-#     print(e)
-#     answer = input("Input value manually or press 'n':")
-#     if answer == 'n': continue 
-#     else: total += float(answer)
         
 # print("\n*****************************\n")
 # print("Total USD: ", total)
