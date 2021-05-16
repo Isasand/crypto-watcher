@@ -19,7 +19,6 @@ def get_pcswap_price(adress, version, token):
         status_ok = False
     else: status_ok = resp.ok
     if 'error' in resp.json():
-        err.append(str(resp.json()['error']) + " for token")
         return err, False, False, False, False
     return err, status_ok, resp.json()['data']['price'], resp.json()['data']['price_BNB'], resp.json()['data']['symbol']
 
@@ -137,7 +136,6 @@ def create_binance_valuemap(f):
                     total += price_usd
 
                     if price_usd != 0.0:
-                        #print(x.split(":")[0] + ": " + str(price_usd) + " USDT")
                         binance[x.split(":")[0]] = price_usd
                     else: 
                         err.append("No price information available for token: " + x.split(":")[0])
